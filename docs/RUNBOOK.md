@@ -27,6 +27,21 @@
 
 ## Verificación
 
+`verify.sh` valida todo el entorno y devuelve exit code distinto de 0 si algo
+falla, así que sirve como evidencia reproducible:
+
+```bash
+./scripts/verify.sh          # estado actual
+./scripts/verify.sh --wait   # espera servicios estables antes de validar
+```
+
+Comprueba: 5 servicios ECS (`ACTIVE` y `running == desired`), target groups
+`healthy`, `/health`, `/`, `/metrics` del dashboard, `/api/health` de Grafana,
+la salud de los datasources (Prometheus y CloudWatch, este último vía task
+role) y que el dashboard `citibike-ep3` tenga sus 4 filas.
+
+Equivalente manual:
+
 ```bash
 aws ecs describe-services \
   --cluster citibike-dev-cluster \
@@ -43,7 +58,8 @@ Abrir Grafana en `http://<alb-dns>:3000` y revisar las cuatro filas del dashboar
 
 | Síntoma | Causa probable | Acción |
 |---|---|---|
-| `up.sh` falla con "credenciales invalidas" | Token expirado | Reiniciar la sesión del laboratorio y reexportar |
+| `up.sh` falla con "credenciales invalidas" | Token expirado o credenciales copiadas de una sesión anterior | Terminar e iniciar de nuevo el laboratorio, esperar el punto verde, abrir **AWS Details** y copiar los tres valores recién emitidos; validar con `aws sts get-caller-identity` |
+| ECS no puede descargar la imagen (`CannotPullContainerError`) | Paquete de GHCR privado | Las 6 imágenes deben ser públicas (`https://github.com/users/Sebithaz-dev/packages`) |
 | Servicio en `ACTIVE` con `runningCount=0` | Imagen inexistente o error de arranque | `aws ecs describe-tasks`, revisar CloudWatch Logs del servicio |
 | Dashboard 502 en el ALB | Contenedor aún arrancando o `/health` falla | Esperar 60 s; revisar `dashboard` logs |
 | Grafana sin datos de CloudWatch | Task role sin permisos o región incorrecta | Verificar `LabRole` y `AWS_REGION`; revisar logs de Grafana |
