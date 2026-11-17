@@ -1,4 +1,4 @@
-FROM grafana/grafana:11.3.0
+FROM grafana/grafana:11.6.16
 
 ENV GF_PATHS_PROVISIONING=/etc/grafana/provisioning \
     GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/citibike-ep3.json
