@@ -1,0 +1,96 @@
+name: Infra CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "terraform/**"
+      - ".github/workflows/infra-ci.yml"
+  pull_request:
+    paths:
+      - "terraform/**"
+      - ".github/workflows/infra-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: infra-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  terraform:
+    name: Terraform fmt + validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+
+      - name: Formato
+        run: terraform -chdir=terraform fmt -check -recursive
+
+      - name: Init (sin backend)
+        run: terraform -chdir=terraform init -backend=false -input=false
+
+      - name: Validate
+        run: terraform -chdir=terraform validate
+
+  docker-config:
+    name: Validar configs de monitoreo
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Validar prometheus.yml y reglas
+        run: |
+          docker run --rm \
+            -v "$PWD/docker/prometheus:/etc/prometheus" \
+            --entrypoint promtool \
+            prom/prometheus:v2.55.1 \
+            check config /etc/prometheus/prometheus.yml.tmpl
+          docker run --rm \
+            -v "$PWD/docker/prometheus:/etc/prometheus" \
+            --entrypoint promtool \
+            prom/prometheus:v2.55.1 \
+            check rules /etc/prometheus/alerts.yml
+
+      - name: Validar alertmanager.yml
+        run: |
+          docker run --rm \
+            -v "$PWD/docker/alertmanager:/etc/alertmanager" \
+            --entrypoint amtool \
+            prom/alertmanager:v0.27.0 \
+            check-config /etc/alertmanager/alertmanager.yml
+
+      - name: Validar dashboard JSON
+        run: python3 -c "import json; json.load(open('docker/grafana/dashboards/citibike-ep3.json'))"
+
+  scripts:
+    name: Lint y tests de scripts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check scripts tests
+
+      - name: Tests
+        run: pytest -q

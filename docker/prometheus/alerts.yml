@@ -1,0 +1,70 @@
+groups:
+  - name: citibike-availability
+    rules:
+      - alert: DashboardDown
+        expr: up{job="dashboard"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: flask-dashboard-s3
+        annotations:
+          summary: "Dashboard ECS caido"
+          description: "Prometheus no puede scrapear /metrics del dashboard hace 2 minutos."
+
+      - alert: PublicEndpointDown
+        expr: probe_success{job="blackbox"} == 0
+        for: 3m
+        labels:
+          severity: critical
+          service: citibike
+        annotations:
+          summary: "Endpoint publico caido"
+          description: "El probe de blackbox falla para {{ $labels.instance }}."
+
+      - alert: GrafanaDown
+        expr: probe_success{job="blackbox", instance="http://localhost:3000/api/health"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          service: grafana
+        annotations:
+          summary: "Grafana no responde"
+          description: "El health check de Grafana falla hace 5 minutos."
+
+  - name: citibike-errors
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(flask_http_request_total{status=~"5.."}[5m]))
+            / clamp_min(sum(rate(flask_http_request_total[5m])), 0.001) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          service: flask-dashboard-s3
+        annotations:
+          summary: "Tasa de 5xx superior al 5%"
+          description: "El dashboard devuelve mas de 5% de errores 5xx en los ultimos 5 minutos."
+
+      - alert: HighLatencyP95
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum(rate(flask_http_request_duration_seconds_bucket[5m])) by (le)
+          ) > 1
+        for: 5m
+        labels:
+          severity: warning
+          service: flask-dashboard-s3
+        annotations:
+          summary: "Latencia p95 mayor a 1s"
+          description: "El percentil 95 de latencia del dashboard supera 1 segundo."
+
+      - alert: UnhandledErrors
+        expr: increase(citibike_errors_total[10m]) > 0
+        for: 0m
+        labels:
+          severity: warning
+          service: flask-dashboard-s3
+        annotations:
+          summary: "Errores no controlados en el dashboard"
+          description: "Se registraron errores 500 no controlados en los ultimos 10 minutos."

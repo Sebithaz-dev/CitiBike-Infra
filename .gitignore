@@ -1,0 +1,17 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+crash.log
+override.tf
+override.tf.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Entorno local
+.env
+.DS_Store
