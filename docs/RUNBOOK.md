@@ -25,6 +25,9 @@
    ./scripts/up.sh
    ```
 
+   El bucket del datalake tiene un default (`citibike-datalake-seb-690247773624`).
+   Para usar otro: `export TF_VAR_s3_bucket_name=otro-bucket` antes de `up.sh`.
+
 ## Verificación
 
 `verify.sh` valida todo el entorno y devuelve exit code distinto de 0 si algo
