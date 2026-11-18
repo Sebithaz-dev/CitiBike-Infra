@@ -29,8 +29,9 @@ variable "instance_type" {
 }
 
 variable "s3_bucket_name" {
-  description = "Bucket del datalake Citi Bike"
+  description = "Bucket del datalake Citi Bike (default: el del Learner Lab de la EP3)"
   type        = string
+  default     = "citibike-datalake-seb-690247773624"
 }
 
 variable "s3_parquet_key" {
