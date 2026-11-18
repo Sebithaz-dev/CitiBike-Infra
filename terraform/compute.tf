@@ -6,6 +6,12 @@ resource "aws_instance" "ecs" {
   iam_instance_profile   = data.aws_iam_instance_profile.lab.name
 
   # Registra la instancia en el cluster y habilita credenciales de task role.
+  #
+  # OJO: no usar `systemctl restart ecs` en bloque. Este script corre dentro de
+  # cloud-final y ecs.service tiene `After=cloud-final.service`, asi que un
+  # restart sincrono espera a que cloud-final termine y cloud-final espera a
+  # este script: deadlock y el agente nunca se registra en el cluster.
+  # `--no-block` encola el arranque y devuelve el control de inmediato.
   user_data = <<-EOF
     #!/bin/bash
     cat >> /etc/ecs/ecs.config <<'CFG'
@@ -13,7 +19,8 @@ resource "aws_instance" "ecs" {
     ECS_ENABLE_TASK_IAM_ROLE=true
     ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true
     CFG
-    systemctl restart ecs
+    systemctl enable ecs
+    systemctl restart --no-block ecs
   EOF
 
   user_data_replace_on_change = true
