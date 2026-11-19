@@ -32,9 +32,11 @@ end=$(date +%s)
 duration=$((end - start))
 echo "Despliegue estable en ${duration}s."
 
-python3 scripts/ci_metrics.py \
-  --deployment-seconds "$duration" \
-  --gate-status pass \
-  --namespace "$NAMESPACE"
+# Se publica con la AWS CLI (ya es requisito del repo) para no depender de
+# boto3 en la maquina del operador; `ci_metrics.py` sigue siendo la via que
+# usan los tests y los workflows.
+aws cloudwatch put-metric-data --namespace "$NAMESPACE" --metric-data \
+  "MetricName=DeploymentDurationSeconds,Value=${duration},Unit=Seconds" \
+  "MetricName=QualityGatePassed,Value=1,Unit=None"
 
 echo "Duracion publicada en CloudWatch (${NAMESPACE}/DeploymentDurationSeconds)."
