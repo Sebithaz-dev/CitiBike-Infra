@@ -1,0 +1,41 @@
+name: Auditoria de cumplimiento
+
+# IE5: audita en cada PR/push (y semanalmente) que los repositorios mantengan
+# las politicas de gobierno: archivos obligatorios, secret scanning, workflows
+# en verde y, cuando el token tiene permisos de administracion, la proteccion
+# de rama. El GITHUB_TOKEN de Actions no puede leer la proteccion de rama, por
+# eso ese control se reporta como SKIP en CI y se audita en modo estricto desde
+# la sesion de operacion (ver docs/COMPLIANCE.md).
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  audit:
+    name: Auditoria de cumplimiento
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Auditar los repositorios de la EP3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python3 scripts/audit_compliance.py --markdown >> "$GITHUB_STEP_SUMMARY"
+          python3 scripts/audit_compliance.py

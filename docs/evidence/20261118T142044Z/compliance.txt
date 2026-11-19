@@ -1,0 +1,54 @@
+
+== Sebithaz-dev/CitiBike-Infra ==
+  [ OK  ] PR obligatorio y checks requeridos
+  [ OK  ] Checks al dia antes de mergear (strict)
+  [ OK  ] Force-push bloqueado
+  [ OK  ] Borrado de main bloqueado
+  [ OK  ] Historial lineal
+  [ OK  ] Conversaciones resueltas antes del merge
+  [ OK  ] Archivo SECURITY.md
+  [ OK  ] Archivo .github/CODEOWNERS
+  [ OK  ] Archivo .github/dependabot.yml
+  [ OK  ] Secret scanning activo
+  [ OK  ] Push protection activa
+  [ OK  ] Workflow 'Infra CI' en verde
+  [ OK  ] Workflow 'Monitoring Images' en verde
+  [ OK  ] Workflow 'Dependabot Updates' en verde
+  [ OK  ] Workflow 'Dependency Graph' en verde
+
+== Sebithaz-dev/Flask-Dashboard-S3 ==
+  [ OK  ] PR obligatorio y checks requeridos
+  [ OK  ] Checks al dia antes de mergear (strict)
+  [ OK  ] Force-push bloqueado
+  [ OK  ] Borrado de main bloqueado
+  [ OK  ] Historial lineal
+  [ OK  ] Conversaciones resueltas antes del merge
+  [ OK  ] Archivo SECURITY.md
+  [ OK  ] Archivo .github/CODEOWNERS
+  [ OK  ] Archivo .github/dependabot.yml
+  [ OK  ] Secret scanning activo
+  [ OK  ] Push protection activa
+  [ OK  ] Workflow 'CI/CD Flask Dashboard' en verde
+  [ OK  ] Workflow 'Security & Quality' en verde
+  [ OK  ] Workflow 'Dependabot Updates' en verde
+  [ OK  ] Workflow 'Dependency Graph' en verde
+
+== Sebithaz-dev/Model-Training-S3 ==
+  [ OK  ] PR obligatorio y checks requeridos
+  [ OK  ] Checks al dia antes de mergear (strict)
+  [ OK  ] Force-push bloqueado
+  [ OK  ] Borrado de main bloqueado
+  [ OK  ] Historial lineal
+  [ OK  ] Conversaciones resueltas antes del merge
+  [ OK  ] Archivo SECURITY.md
+  [ OK  ] Archivo .github/CODEOWNERS
+  [ OK  ] Archivo .github/dependabot.yml
+  [ OK  ] Secret scanning activo
+  [ OK  ] Push protection activa
+  [ OK  ] Workflow 'CI' en verde
+  [ OK  ] Workflow 'Security & Quality' en verde
+  [ OK  ] Workflow 'Train Model' en verde
+  [ OK  ] Workflow 'Dependabot Updates' en verde
+  [ OK  ] Workflow 'Dependency Graph' en verde
+
+Resumen: 46 controles, 0 fallas, 0 no evaluables.
