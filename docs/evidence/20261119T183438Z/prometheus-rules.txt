@@ -1,0 +1,8 @@
+[citibike-availability]
+  DashboardDown          inactive  up{job="dashboard"} == 0
+  PublicEndpointDown     inactive  probe_success{job="blackbox"} == 0
+  GrafanaDown            inactive  probe_success{instance="http://localhost:3000/api/health",job="blackbox"} == 0
+[citibike-errors]
+  HighErrorRate          inactive  sum(rate(flask_http_request_total{status=~"5.."}[5m])) / clamp_min(sum(rate(flask_http_request_total[5m])), 0.001) > 0.05
+  HighLatencyP95         inactive  histogram_quantile(0.95, sum by (le) (rate(flask_http_request_duration_seconds_bucket[5m]))) > 1
+  UnhandledErrors        inactive  increase(citibike_errors_total[10m]) > 0

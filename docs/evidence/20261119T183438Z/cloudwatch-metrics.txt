@@ -1,0 +1,29 @@
+## CitiBike/Model
+
+## CitiBike/CI
+DeploymentDurationSeconds
+QualityGatePassed
+TestCoveragePercent
+TestsFailed
+TestsPassed
+
+## ECS/ContainerInsights
+ContainerInstanceCount
+CpuReserved
+CpuUtilized
+DeploymentCount
+DesiredTaskCount
+MemoryReserved
+MemoryUtilized
+PendingTaskCount
+RunningTaskCount
+ServiceCount
+StorageReadBytes
+StorageWriteBytes
+TaskCount
+TaskSetCount
+
+## CWAgent
+disk_used_percent
+mem_used_percent
+

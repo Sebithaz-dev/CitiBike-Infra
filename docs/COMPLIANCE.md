@@ -68,10 +68,14 @@ python3 scripts/audit_compliance.py
 ## 4. Evidencia de la última auditoría
 
 La salida completa se guarda con `./scripts/collect_evidence.sh` en
-`docs/evidence/<fecha>/compliance.md`. La corrida del **2026-11-18** sobre los
-tres repositorios dio **46 controles, 0 fallas, 0 no evaluables** (modo
+`docs/evidence/<fecha>/compliance.md`. La corrida del **2026-11-19** sobre los
+tres repositorios dio **47 controles, 0 fallas, 0 no evaluables** (modo
 estricto), incluyendo protección de rama, secret scanning y push protection
 activos en los tres repos.
+
+El propio check **`Auditoria de cumplimiento`** es requerido en `main`
+(`infra-ci.yml` + `compliance.yml`), así que una regresión de gobierno bloquea
+el merge igual que un test rojo.
 
 ## 5. Referencias normativas
 
