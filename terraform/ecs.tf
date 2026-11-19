@@ -154,6 +154,12 @@ resource "aws_ecs_service" "prometheus" {
   desired_count   = 1
   launch_type     = "EC2"
 
+  # Host network + puerto fijo: no se puede solapar una tarea vieja y una
+  # nueva, asi que el despliegue baja a 0 tareas antes de levantar la nueva.
+  # Con los valores por defecto (100/200) el rolling update nunca converge.
+  deployment_minimum_healthy_percent = 0
+  deployment_maximum_percent         = 100
+
   deployment_circuit_breaker {
     enable   = true
     rollback = true
@@ -209,6 +215,12 @@ resource "aws_ecs_service" "grafana" {
   task_definition = aws_ecs_task_definition.grafana.arn
   desired_count   = 1
   launch_type     = "EC2"
+
+  # Host network + puerto fijo: no se puede solapar una tarea vieja y una
+  # nueva, asi que el despliegue baja a 0 tareas antes de levantar la nueva.
+  # Con los valores por defecto (100/200) el rolling update nunca converge.
+  deployment_minimum_healthy_percent = 0
+  deployment_maximum_percent         = 100
 
   deployment_circuit_breaker {
     enable   = true
@@ -266,6 +278,12 @@ resource "aws_ecs_service" "alertmanager" {
   desired_count   = 1
   launch_type     = "EC2"
 
+  # Host network + puerto fijo: no se puede solapar una tarea vieja y una
+  # nueva, asi que el despliegue baja a 0 tareas antes de levantar la nueva.
+  # Con los valores por defecto (100/200) el rolling update nunca converge.
+  deployment_minimum_healthy_percent = 0
+  deployment_maximum_percent         = 100
+
   deployment_circuit_breaker {
     enable   = true
     rollback = true
@@ -316,6 +334,12 @@ resource "aws_ecs_service" "blackbox" {
   task_definition = aws_ecs_task_definition.blackbox.arn
   desired_count   = 1
   launch_type     = "EC2"
+
+  # Host network + puerto fijo: no se puede solapar una tarea vieja y una
+  # nueva, asi que el despliegue baja a 0 tareas antes de levantar la nueva.
+  # Con los valores por defecto (100/200) el rolling update nunca converge.
+  deployment_minimum_healthy_percent = 0
+  deployment_maximum_percent         = 100
 
   deployment_circuit_breaker {
     enable   = true

@@ -19,6 +19,9 @@ resource "aws_instance" "ecs" {
     ECS_ENABLE_TASK_IAM_ROLE=true
     ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true
     CFG
+    # Las imagenes se publican con el tag `latest`, que el agente cachea: sin
+    # esto un `force-new-deployment` reutiliza la imagen vieja del host.
+    echo 'ECS_IMAGE_PULL_BEHAVIOR=always' >> /etc/ecs/ecs.config
     systemctl enable ecs
     systemctl restart --no-block ecs
 
