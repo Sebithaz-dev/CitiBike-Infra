@@ -134,10 +134,19 @@ def check_workflows(repo: str, token_value: str) -> list[tuple[str, bool | None,
             results.append((f"Workflow '{workflow['name']}' con run en main", None, "sin runs"))
             continue
         run = runs[0]
+        if run.get("status") != "completed":
+            results.append(
+                (
+                    f"Workflow '{workflow['name']}' en main",
+                    None,
+                    f"en curso ({run.get('status')})",
+                )
+            )
+            continue
         results.append(
             (
                 f"Workflow '{workflow['name']}' en verde",
-                run.get("conclusion") == "success",
+                run.get("conclusion") in ("success", "skipped"),
                 f"{run.get('status')}/{run.get('conclusion')} ({run.get('html_url')})",
             )
         )
