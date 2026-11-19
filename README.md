@@ -121,6 +121,7 @@ Grafana queda en `http://<alb-dns>:3000` con usuario `admin` / password `citibik
 - **CloudWatch Logs** recibe todos los contenedores vía `awslogs` con retención de 7 días. Los logs del dashboard son JSON con `request_id`.
 - **Métricas CI/CD** (`scripts/ci_metrics.py`): `DeploymentDurationSeconds`, `TestCoveragePercent`, `TestsPassed/Failed` y `QualityGatePassed` en `CitiBike/CI`.
 - **Métricas del modelo** (`Model-Training-S3/ml/metrics_export.py`): `roc_auc`, `f1_score`, `QualityGatePassed`, etc. en `CitiBike/Model`.
+- **Guía de verificación manual** (dashboard, logs, alarmas, falla controlada, gates y cierre): [`docs/TESTING.md`](docs/TESTING.md).
 
 ## CI del repositorio
 

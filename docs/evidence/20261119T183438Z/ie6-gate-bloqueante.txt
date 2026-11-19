@@ -1,0 +1,11 @@
+PR: https://github.com/Sebithaz-dev/Flask-Dashboard-S3/pull/24
+Titulo: demo: el gate de CI bloquea el merge (no mergear)
+estado de merge: BLOCKED
+Run tests	fail	25s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/44588728715/job/135788622942	
+SonarCloud	fail	28s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/44588728820/job/135788624653	
+Build Docker image	skipping	0	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/44588728715/job/135788915484	
+Deploy en Kubernetes simulado (kind)	skipping	0	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/44588728715/job/135788919662	
+Deploy to Render	skipping	0	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/44588728715/job/135788921882	
+Publicar imagen en GHCR	skipping	0	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/44588728715/job/135788921658	
+Snyk (SCA + Code)	pending	0	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/44588728820/job/135788625067	
+security/snyk (sebithaz-dev)	pass	0	https://app.snyk.io/org/sebithaz-dev/pr-checks/965fafb1-bba5-45f8-9149-308e93185adc	No manifest changes detected in 1 project
