@@ -140,19 +140,22 @@ Grafana queda en `http://<alb-dns>:3000` con usuario `admin` / password `citibik
 
 ## Estado de la EP3
 
+Última verificación end-to-end: **2026-11-18**, `./scripts/verify.sh --wait` →
+`Todo OK` (evidencia en [`docs/evidence/`](docs/evidence/)).
+
 | IE | Evidencia en este repo | Estado |
 |---|---|---|
-| IE1 (20 %) | Prometheus + Grafana + CloudWatch Logs + alertas + blackbox | 🟡 scaffold completo, falta desplegar |
-| IE2 (20 %) | Terraform ECS/ALB + despliegue automatizado | 🟡 Terraform validado, falta `apply` real |
-| IE3 (10 %) | Dashboard de 4 filas + `ci_metrics.py` + export del modelo | 🟡 dashboard definido, falta publicar métricas |
-| IE4 (10 %) | `README`, `docs/ARCHITECTURE.md`, runbook | 🟡 borrador |
-| IE5 (20 %) | Branch protection, secret scanning, security groups, IaC auditable | 🟢 aplicado en GitHub |
-| IE6 (20 %) | Quality gate del modelo, gates de CI, alertas bloqueantes | 🟡 gate implementado en Model-Training |
+| IE1 (20 %) | Prometheus + Grafana + CloudWatch Logs, 6 reglas de alerta y 7 alarmas de CloudWatch (disponibilidad, 5xx, latencia p95, CPU, memoria, quality gates) | ✅ desplegado y verificado |
+| IE2 (20 %) | Terraform ECS/ALB en AWS real: 5/5 servicios `1/1`, target groups `healthy`, `/health` `/` `/metrics` 200 | ✅ desplegado y verificado |
+| IE3 (10 %) | Dashboard de 4 filas (disponibilidad, errores/latencia, recursos, CI/CD) + `ci_metrics.py` + publicación de cobertura desde el CI de Flask | ✅ con datos reales (cobertura 83,61 %, 29 tests) |
+| IE4 (10 %) | `README`, `docs/ARCHITECTURE.md`, `docs/RUNBOOK.md`, `docs/COMPLIANCE.md` | 🟡 falta el informe EP3 y las reflexiones individuales |
+| IE5 (20 %) | Branch protection, checks requeridos, CODEOWNERS, Dependabot, secret scanning y `scripts/audit_compliance.py` (46/46 controles) | ✅ auditado |
+| IE6 (20 %) | Quality gate del modelo, cobertura mínima, Snyk/Sonar, `terraform validate`, circuit breaker y alarmas | ✅ implementado; falta la captura de un PR bloqueado |
 
 ## Próximos pasos
 
-1. Publicar las imágenes de monitoreo y ejecutar `up.sh` con credenciales válidas.
-2. Verificar los cinco servicios ECS en `ACTIVE`, capturar Grafana y las alarmas.
-3. Añadir alarmas de CloudWatch (CPU, memoria, tarea caída) y el dashboard espejo.
-4. Integrar `ci_metrics.py` en los workflows de la app y del modelo.
-5. Completar `docs/COMPLIANCE.md`, el informe y las evidencias.
+1. Redactar el informe EP3 (matriz IE → evidencia, capturas de Grafana y CloudWatch,
+   declaración de uso de IA) y las reflexiones individuales.
+2. Capturar un PR que se detenga solo (evidencia de IE6) y adjuntarlo.
+3. Repetir `./scripts/collect_evidence.sh` al inicio de cada sesión para dejar la
+   evidencia con la fecha del día.
