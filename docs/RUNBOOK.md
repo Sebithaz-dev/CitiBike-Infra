@@ -57,6 +57,32 @@ curl -fsS "$(terraform -chdir=terraform output -raw dashboard_url)/metrics" | he
 
 Abrir Grafana en `http://<alb-dns>:3000` y revisar las cuatro filas del dashboard `CitiBike EP3`.
 
+### Evidencia para el informe
+
+`collect_evidence.sh` ejecuta la verificación y guarda todo lo que el informe
+necesita en `docs/evidence/<fecha>/` (servicios ECS, target groups, HTTP,
+targets y reglas de Prometheus, alarmas y métricas de CloudWatch y la auditoría
+de cumplimiento de los tres repos):
+
+```bash
+./scripts/collect_evidence.sh
+```
+
+### Alarmas y auditoría
+
+Las alarmas de CloudWatch se crean con Terraform (`terraform/monitoring.tf`) y
+se consultan así:
+
+```bash
+aws cloudwatch describe-alarms --alarm-name-prefix citibike-dev \
+  --query 'MetricAlarms[].[AlarmName,StateValue,MetricName]' --output table
+
+python3 scripts/audit_compliance.py --strict      # auditoría de gobierno (IE5)
+```
+
+Con `TF_VAR_alarm_email=tu@correo.cl` en `up.sh` las alarmas además envían
+correo (hay que confirmar la suscripción SNS una vez).
+
 ## Problemas comunes
 
 | Síntoma | Causa probable | Acción |
