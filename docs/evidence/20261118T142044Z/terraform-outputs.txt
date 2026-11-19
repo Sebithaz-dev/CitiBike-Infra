@@ -1,0 +1,13 @@
+alb_dns_name = "citibike-dev-alb-1774666530.us-east-1.elb.amazonaws.com"
+dashboard_url = "http://citibike-dev-alb-1774666530.us-east-1.elb.amazonaws.com"
+ecs_cluster_name = "citibike-dev-cluster"
+ecs_instance_id = "i-0b7d42fa874065b9f"
+grafana_url = "http://citibike-dev-alb-1774666530.us-east-1.elb.amazonaws.com:3000"
+log_groups = {
+  "alertmanager" = "/ecs/citibike-dev/alertmanager"
+  "blackbox" = "/ecs/citibike-dev/blackbox"
+  "dashboard" = "/ecs/citibike-dev/dashboard"
+  "grafana" = "/ecs/citibike-dev/grafana"
+  "prometheus" = "/ecs/citibike-dev/prometheus"
+}
+prometheus_internal_url = "http://172.31.39.2:9090"
