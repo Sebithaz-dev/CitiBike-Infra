@@ -21,6 +21,27 @@ resource "aws_instance" "ecs" {
     CFG
     systemctl enable ecs
     systemctl restart --no-block ecs
+
+    # CloudWatch agent para las metricas de memoria y disco de la instancia
+    # (AWS/EC2 solo publica CPU en el monitoreo basico; mem_used_percent y
+    # disk_used_percent los aporta el agente en el namespace CWAgent).
+    dnf install -y amazon-cloudwatch-agent
+    cat > /opt/aws/amazon-cloudwatch-agent/etc/cwagent-ep3.json <<'JSON'
+    {
+      "agent": { "metrics_collection_interval": 60 },
+      "metrics": {
+        "namespace": "CWAgent",
+        "append_dimensions": { "InstanceId": "$${aws:InstanceId}" },
+        "metrics_collected": {
+          "mem": { "measurement": ["mem_used_percent"] },
+          "disk": { "measurement": ["used_percent"], "resources": ["/"] }
+        }
+      }
+    }
+    JSON
+    /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+      -a fetch-config -m ec2 -s \
+      -c file:/opt/aws/amazon-cloudwatch-agent/etc/cwagent-ep3.json
   EOF
 
   user_data_replace_on_change = true
