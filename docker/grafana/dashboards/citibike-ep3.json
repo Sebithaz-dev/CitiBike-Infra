@@ -672,7 +672,7 @@
     },
     {
       "type": "timeseries",
-      "title": "Cobertura de tests (%)",
+      "title": "Cobertura de tests por repo (%)",
       "datasource": {
         "type": "cloudwatch",
         "uid": "cloudwatch"
@@ -687,7 +687,29 @@
         "defaults": {
           "unit": "percent",
           "min": 0,
-          "max": 100
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 60
+              },
+              {
+                "color": "green",
+                "value": 70
+              }
+            ]
+          },
+          "custom": {
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          }
         },
         "overrides": []
       },
@@ -699,7 +721,6 @@
       },
       "targets": [
         {
-          "refId": "A",
           "datasource": {
             "type": "cloudwatch",
             "uid": "cloudwatch"
@@ -709,7 +730,29 @@
           "statistic": "Maximum",
           "region": "us-east-1",
           "period": "300",
-          "matchExact": true
+          "matchExact": true,
+          "refId": "A",
+          "dimensions": {
+            "Repo": "Flask-Dashboard-S3"
+          },
+          "label": "Flask-Dashboard-S3"
+        },
+        {
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "cloudwatch"
+          },
+          "namespace": "CitiBike/CI",
+          "metricName": "TestCoveragePercent",
+          "statistic": "Maximum",
+          "region": "us-east-1",
+          "period": "300",
+          "matchExact": true,
+          "refId": "B",
+          "dimensions": {
+            "Repo": "Model-Training-S3"
+          },
+          "label": "Model-Training-S3"
         }
       ]
     },
@@ -755,6 +798,101 @@
           "matchExact": true
         }
       ]
+    },
+    {
+      "type": "row",
+      "title": "5. Logs del microservicio (CloudWatch Logs)",
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 37
+      },
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Errores registrados en logs (ERROR o 5xx, cada 5 min)",
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "cloudwatch"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 38
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "cloudwatch"
+          },
+          "queryMode": "Logs",
+          "region": "us-east-1",
+          "id": "",
+          "expression": "filter level = \"ERROR\" or status >= 500 | stats count(*) as errores by bin(5m)",
+          "logGroupNames": [
+            "/ecs/citibike-dev/dashboard"
+          ],
+          "statsGroups": []
+        }
+      ]
+    },
+    {
+      "type": "logs",
+      "title": "Logs recientes del dashboard (/ecs/citibike-dev/dashboard)",
+      "datasource": {
+        "type": "cloudwatch",
+        "uid": "cloudwatch"
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 16,
+        "x": 8,
+        "y": 38
+      },
+      "options": {
+        "showTime": true,
+        "wrapLogMessage": true,
+        "sortOrder": "Descending",
+        "enableLogDetails": true,
+        "dedupStrategy": "none",
+        "prettifyLogMessage": false
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "cloudwatch",
+            "uid": "cloudwatch"
+          },
+          "queryMode": "Logs",
+          "region": "us-east-1",
+          "id": "",
+          "expression": "fields @timestamp, level, path, status, duration_ms, request_id, message | sort @timestamp desc | limit 200",
+          "logGroupNames": [
+            "/ecs/citibike-dev/dashboard"
+          ],
+          "statsGroups": []
+        }
+      ]
     }
   ],
   "refresh": "30s",
@@ -775,6 +913,6 @@
   "timezone": "browser",
   "title": "CitiBike EP3 - Observabilidad unificada",
   "uid": "citibike-ep3",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }

@@ -25,7 +25,7 @@ Verificadas con AWS CLI antes de escribir el Terraform:
 
 ## Decisión 1 — ECS on EC2 en lugar de EKS
 
-**Estado:** aceptada.
+**Estado:** aceptada, con autorización del docente del curso (por costo).
 
 **Contexto:** la EP2 desplegó Kubernetes simulado con `kind` y dejó manifiestos en `Flask-Dashboard-S3/k8s/`. La opción "más directa" para IE2 sería EKS real.
 
@@ -48,8 +48,8 @@ Verificadas con AWS CLI antes de escribir el Terraform:
 
 - **Prometheus** cubre métricas de aplicación (`/metrics` de Flask), latencia, errores y disponibilidad vía blackbox.
 - **CloudWatch** cubre logs (`awslogs`), CPU/memoria de ECS (Container Insights) y métricas del pipeline (`CitiBike/CI`, `CitiBike/Model`).
-- **Grafana** unifica ambos datasources en un solo dashboard de cuatro filas.
-- **Alertmanager** recibe las reglas de Prometheus; en la demo no envía correo, las alertas se visualizan en Prometheus/Grafana.
+- **Grafana** unifica ambos datasources en un solo dashboard de cinco filas (la quinta muestra los logs de CloudWatch Logs).
+- **Alertmanager** recibe las reglas de Prometheus; no envía correo, las alertas se visualizan en Prometheus/Grafana; las notificaciones por correo salen de las alarmas de CloudWatch vía SNS (`alarm_email`).
 - **Se descartó Loki/Promtail** porque requiere montar el Docker socket (contenedor privilegiado) o un agente con permisos adicionales.
 
 ## Decisión 3 — Imágenes de monitoreo horneadas
@@ -91,7 +91,7 @@ terraform apply
 |---|---|
 | IE1 | Prometheus + Grafana + CloudWatch Logs + alertas + probes de disponibilidad de ECS, Grafana y Render |
 | IE2 | Terraform reproducible, ECS/ALB real, despliegue medido y trazable por SHA |
-| IE3 | Dashboard de 4 filas con disponibilidad, errores, CPU/memoria, duración de despliegue, cobertura y ROC-AUC |
+| IE3 | Dashboard de 5 filas con disponibilidad, errores, CPU/memoria, duración de despliegue, cobertura por repo, ROC-AUC y logs |
 | IE4 | Este documento + README + runbook + informe EP3 |
 | IE5 | IaC auditable, IAM mínimo, IMDSv2, EBS cifrado, branch protection y secret scanning en los repos |
 | IE6 | Quality gate del modelo y alertas que bloquean/visibilizan regresiones |

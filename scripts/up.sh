@@ -18,5 +18,9 @@ terraform -chdir=terraform apply -input=false -auto-approve
 echo
 terraform -chdir=terraform output
 echo
-echo "Grafana: usuario admin / password citibike-ep3"
+echo "Grafana: usuario admin / password -> terraform -chdir=terraform output -raw grafana_admin_password"
+if ! grep -qs '^alarm_email *= *"[^"]' terraform/terraform.tfvars && [ -z "${TF_VAR_alarm_email:-}" ]; then
+  echo "AVISO: alarm_email no esta definido; las alarmas de CloudWatch no notificaran a nadie." >&2
+  echo "       Agrega alarm_email en terraform/terraform.tfvars y confirma la suscripcion SNS." >&2
+fi
 echo "Recuerda ejecutar ./scripts/down.sh al terminar la sesion."

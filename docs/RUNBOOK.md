@@ -41,7 +41,7 @@ falla, así que sirve como evidencia reproducible:
 Comprueba: 5 servicios ECS (`ACTIVE` y `running == desired`), target groups
 `healthy`, `/health`, `/`, `/metrics` del dashboard, `/api/health` de Grafana,
 la salud de los datasources (Prometheus y CloudWatch, este último vía task
-role) y que el dashboard `citibike-ep3` tenga sus 4 filas.
+role) y que el dashboard `citibike-ep3` tenga sus 5 filas.
 
 Equivalente manual:
 
@@ -55,7 +55,7 @@ curl -fsS "$(terraform -chdir=terraform output -raw dashboard_url)/health"
 curl -fsS "$(terraform -chdir=terraform output -raw dashboard_url)/metrics" | head
 ```
 
-Abrir Grafana en `http://<alb-dns>:3000` y revisar las cuatro filas del dashboard `CitiBike EP3`.
+Abrir Grafana en `http://<alb-dns>:3000` y revisar las cinco filas del dashboard `CitiBike EP3`.
 
 ### Evidencia para el informe
 
@@ -80,8 +80,9 @@ aws cloudwatch describe-alarms --alarm-name-prefix citibike-dev \
 python3 scripts/audit_compliance.py --strict      # auditoría de gobierno (IE5)
 ```
 
-Con `TF_VAR_alarm_email=tu@correo.cl` en `up.sh` las alarmas además envían
-correo (hay que confirmar la suscripción SNS una vez).
+Con `alarm_email` en `terraform/terraform.tfvars` (o `TF_VAR_alarm_email=tu@correo.cl`)
+las alarmas envían correo al pasar a `ALARM` y al volver a `OK`. Hay que
+confirmar la suscripción SNS una vez por entorno; `up.sh` avisa si falta.
 
 ## Problemas comunes
 

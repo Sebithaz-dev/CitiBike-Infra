@@ -35,8 +35,10 @@ echo "Despliegue estable en ${duration}s."
 # Se publica con la AWS CLI (ya es requisito del repo) para no depender de
 # boto3 en la maquina del operador; `ci_metrics.py` sigue siendo la via que
 # usan los tests y los workflows.
+# Solo la duracion: QualityGatePassed lo publican los pipelines de CI segun el
+# resultado real de los tests (un deploy manual no evalua calidad).
 aws cloudwatch put-metric-data --namespace "$NAMESPACE" --metric-data \
   "MetricName=DeploymentDurationSeconds,Value=${duration},Unit=Seconds" \
-  "MetricName=QualityGatePassed,Value=1,Unit=None"
+  "MetricName=DeploymentSucceeded,Value=1,Unit=None"
 
 echo "Duracion publicada en CloudWatch (${NAMESPACE}/DeploymentDurationSeconds)."

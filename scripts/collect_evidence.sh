@@ -26,6 +26,8 @@ mkdir -p "$OUT_DIR"
 ALB="$(terraform -chdir=terraform output -raw alb_dns_name)"
 DASHBOARD_URL="http://${ALB}"
 GRAFANA_URL="http://${ALB}:3000"
+# La contrasena de Grafana la genera Terraform (random_password); no hay una fija.
+GRAFANA_PASS="${GRAFANA_PASS:-$(terraform -chdir=terraform output -raw grafana_admin_password 2>/dev/null || true)}"
 
 echo "== Recolectando evidencia en ${OUT_DIR} =="
 
@@ -67,7 +69,7 @@ echo "-- disponibilidad HTTP"
 } >"${OUT_DIR}/http-status.txt" 2>&1
 
 echo "-- targets y reglas de Prometheus"
-GRAFANA_URL="$GRAFANA_URL" python3 - "$OUT_DIR" <<'PY'
+GRAFANA_URL="$GRAFANA_URL" GRAFANA_PASS="$GRAFANA_PASS" python3 - "$OUT_DIR" <<'PY'
 import base64
 import json
 import os
@@ -76,7 +78,7 @@ import urllib.request
 
 out_dir = sys.argv[1]
 base = os.environ["GRAFANA_URL"] + "/api/datasources/proxy/uid/prometheus/api/v1/"
-auth = base64.b64encode(b"admin:citibike-ep3").decode()
+auth = base64.b64encode(("admin:" + os.environ["GRAFANA_PASS"]).encode()).decode()
 
 
 def get(path):

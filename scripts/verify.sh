@@ -16,7 +16,7 @@ REGION="${AWS_REGION:-us-east-1}"
 CLUSTER="${ECS_CLUSTER:-citibike-dev-cluster}"
 TG_PREFIX="${TG_PREFIX:-citibike-dev}"
 GRAFANA_USER="${GRAFANA_USER:-admin}"
-GRAFANA_PASS="${GRAFANA_PASS:-citibike-ep3}"
+GRAFANA_PASS="${GRAFANA_PASS:-$(terraform -chdir=terraform output -raw grafana_admin_password 2>/dev/null || true)}"
 WAIT=0
 [ "${1:-}" = "--wait" ] && WAIT=1
 
@@ -142,10 +142,10 @@ if [ -n "$GRAFANA_URL" ]; then
     rows=$(printf '%s' "$dash" | python3 -c \
       'import json,sys;d=json.load(sys.stdin);print(sum(1 for p in d["dashboard"].get("panels",[]) if p.get("type")=="row"))' \
       2>/dev/null || echo 0)
-    if [ "$rows" = "4" ]; then
-      ok "dashboard citibike-ep3: 4 filas"
+    if [ "$rows" = "5" ]; then
+      ok "dashboard citibike-ep3: 5 filas"
     else
-      ko "dashboard citibike-ep3: ${rows} filas (esperadas 4)"
+      ko "dashboard citibike-ep3: ${rows} filas (esperadas 5)"
     fi
   else
     ko "dashboard citibike-ep3 no encontrado"
