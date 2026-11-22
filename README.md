@@ -110,6 +110,10 @@ cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 ./scripts/up.sh          # terraform init + apply y muestra las URLs
 ./scripts/deploy.sh "$(git rev-parse --short HEAD)"   # despliegue medido
 ./scripts/down.sh        # destruye todo al terminar
+
+# Sesión EP3 completa (up + verify + tráfico + deploy + falla controlada + evidencia)
+./scripts/sesion_ep3.sh
+./scripts/demo_gate_seguridad.sh ../Flask-Dashboard-S3 docs/evidence/<fecha>   # IE6 seguridad
 ```
 
 Grafana queda en `http://<alb-dns>:3000` con usuario `admin`. La contraseña la genera Terraform en cada entorno (no está en el repositorio):

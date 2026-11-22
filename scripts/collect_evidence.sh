@@ -133,11 +133,30 @@ echo "-- ultimas metricas de CI/CD y modelo"
 {
   end="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   start="$(date -u -d '-6 hours' +%Y-%m-%dT%H:%M:%SZ)"
-  for metric in TestCoveragePercent TestsPassed QualityGatePassed DeploymentDurationSeconds; do
+  # Cobertura y tests se publican por repo (dimension Repo).
+  for repo in Flask-Dashboard-S3 Model-Training-S3; do
+    for metric in TestCoveragePercent TestsPassed TestsFailed; do
+      echo "## CitiBike/CI ${metric} (Repo=${repo})"
+      aws cloudwatch get-metric-statistics --namespace CitiBike/CI \
+        --metric-name "$metric" --dimensions "Name=Repo,Value=${repo}" \
+        --start-time "$start" --end-time "$end" \
+        --period 300 --statistics Maximum \
+        --query 'Datapoints[].{fecha:Timestamp,valor:Maximum}' --output table 2>/dev/null
+    done
+  done
+  # Gate y despliegue van sin dimensiones (las alarmas los agregan).
+  for metric in QualityGatePassed DeploymentDurationSeconds DeploymentSucceeded; do
     echo "## CitiBike/CI ${metric}"
     aws cloudwatch get-metric-statistics --namespace CitiBike/CI \
       --metric-name "$metric" --start-time "$start" --end-time "$end" \
-      --period 300 --statistics Maximum \
+      --period 300 --statistics Minimum Maximum \
+      --query 'Datapoints[].{fecha:Timestamp,min:Minimum,max:Maximum}' --output table 2>/dev/null
+  done
+  for metric in QualityGatePassed roc_auc f1_score; do
+    echo "## CitiBike/Model ${metric}"
+    aws cloudwatch get-metric-statistics --namespace CitiBike/Model \
+      --metric-name "$metric" --start-time "$(date -u -d '-7 days' +%Y-%m-%dT%H:%M:%SZ)" --end-time "$end" \
+      --period 3600 --statistics Maximum \
       --query 'Datapoints[].{fecha:Timestamp,valor:Maximum}' --output table 2>/dev/null
   done
 } >"${OUT_DIR}/cloudwatch-cicd-values.txt" 2>&1
@@ -166,6 +185,9 @@ Generada con \`./scripts/collect_evidence.sh\`.
 | cloudwatch-metrics.txt | Métricas disponibles por namespace |
 | cloudwatch-cicd-values.txt | Últimos valores de las métricas de CI/CD |
 | compliance.txt / compliance.md | Auditoría de cumplimiento de los 3 repos |
+| falla-controlada.txt | Falla controlada: alarma en ALARM y recuperación a OK (si se ejecutó \`sesion_ep3.sh\`) |
+| deploy.txt | Despliegue medido con \`deploy.sh\` (si se ejecutó \`sesion_ep3.sh\`) |
+| ie6-gate-seguridad.txt | PR bloqueado por Snyk (si se ejecutó \`demo_gate_seguridad.sh\`) |
 EOF
 
 echo "Listo: ${OUT_DIR}"
