@@ -3,6 +3,27 @@
 Pasos para comprobar **con tus propios ojos** cada indicador, sin depender de lo
 que diga otro. Todo se ejecuta desde `CitiBike-Infra/` salvo donde se indique.
 
+## Atajo: la sesión completa en un comando
+
+Después de la preparación (paso 0), un solo script hace los pasos 1, 5, 7 y 9
+(sin el `down.sh`) y deja la evidencia en `docs/evidence/<fecha>/`:
+
+```bash
+./scripts/sesion_ep3.sh
+```
+
+Levanta el entorno, verifica, genera tráfico, mide un despliegue, provoca la
+falla controlada (alarma en `ALARM` y vuelta a `OK`, en `falla-controlada.txt`)
+y recolecta la evidencia. Deja el entorno arriba para sacar las capturas.
+
+La evidencia del bloqueo por seguridad (§6.1) también tiene script:
+
+```bash
+./scripts/demo_gate_seguridad.sh ../Flask-Dashboard-S3 docs/evidence/<fecha>
+```
+
+Al terminar, `./scripts/down.sh`.
+
 ## 0. Preparación (2 min)
 
 1. En el Learner Lab: **AWS Details → Show** y copia `AWS_ACCESS_KEY_ID`,
@@ -145,12 +166,16 @@ Con credenciales vigentes del Learner Lab, ese run también publica
 
 ### 6.1 Bloqueo por seguridad (Snyk)
 
-Mismo procedimiento, pero agregando una dependencia con una vulnerabilidad
-conocida de severidad alta en `requirements.txt` de Flask-Dashboard-S3:
+Mismo procedimiento, pero agregando una dependencia con vulnerabilidades
+críticas conocidas en `requirements.txt` de Flask-Dashboard-S3 (o, más simple,
+`./scripts/demo_gate_seguridad.sh ../Flask-Dashboard-S3`). Se usa `django==2.2`
+porque se instala sin chocar con `flask==3.1.3`: así el check falla por Snyk y
+no por un conflicto de pip.
 
 ```bash
 git checkout -b demo/gate-seguridad
-echo "jinja2==2.10" >> requirements.txt
+[ -z "$(tail -c1 requirements.txt)" ] || echo >> requirements.txt   # salto de línea final
+echo "django==2.2" >> requirements.txt
 git add . && git commit -m "demo: dependencia vulnerable" && git push -u origin demo/gate-seguridad
 gh pr create --title "demo: gate de seguridad" --body "no mergear"
 ```
