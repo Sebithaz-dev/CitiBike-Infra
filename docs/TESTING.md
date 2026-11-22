@@ -24,6 +24,12 @@ que diga otro. Todo se ejecuta desde `CitiBike-Infra/` salvo donde se indique.
 > Las credenciales del laboratorio duran **4 horas**. Si algo empieza a fallar
 > con `ExpiredToken`, vuelve a copiarlas: no es un bug del proyecto.
 
+Para los comandos que consultan Grafana por API:
+
+```bash
+export GRAFANA_PASS="$(terraform -chdir=terraform output -raw grafana_admin_password)"
+```
+
 ## 1. Verificación automática (1 min)
 
 ```bash
@@ -33,11 +39,12 @@ que diga otro. Todo se ejecuta desde `CitiBike-Infra/` salvo donde se indique.
 Debes terminar con `Todo OK.` y exit code 0 (`echo $?`). Comprueba, línea por
 línea: 5 servicios ECS en `1/1`, target groups `healthy`, `/health` `/`
 `/metrics` en 200, Grafana con `database ok`, ambos datasources y el dashboard
-`citibike-ep3` con 4 filas.
+`citibike-ep3` con 5 filas.
 
 ## 2. El dashboard unificado (IE1 + IE3)
 
-Abre `http://$ALB:3000` (usuario `admin`, contraseña `citibike-ep3`) y entra a
+Abre `http://$ALB:3000` (usuario `admin`, contraseña en
+`terraform -chdir=terraform output -raw grafana_admin_password`) y entra a
 **Dashboards → CitiBike EP3 - Observabilidad unificada**:
 
 | Fila | Qué deberías ver |
@@ -45,7 +52,8 @@ Abre `http://$ALB:3000` (usuario `admin`, contraseña `citibike-ep3`) y entra a
 | 1. Disponibilidad | `Dashboard ECS` y `Dashboard Render` en verde; `Servicios ECS corriendo` = 5; línea de `probe_success` por endpoint |
 | 2. Errores y latencia | RPS del dashboard, 5xx en 0, p95 estable (ms) |
 | 3. Recursos | CPU y memoria del servicio `dashboard` (Container Insights) + CPU y memoria de **la instancia** (AWS/EC2 y CWAgent) |
-| 4. CI/CD y modelo | Duración del despliegue (último `deploy.sh`), cobertura de tests y `Quality gate` |
+| 4. CI/CD y modelo | Duración del despliegue (último `deploy-ecs` o `deploy.sh`), cobertura de tests de Flask y Model-Training y ROC-AUC |
+| 5. Logs | Errores registrados en logs cada 5 min y los logs recientes del dashboard (JSON con `request_id`) |
 
 Para generar tráfico y ver las gráficas moverse:
 
@@ -62,7 +70,7 @@ curl -s http://$ALB/metrics | grep -E "^flask_http_request_total|^citibike_" | h
 Y en Prometheus (a través del proxy de Grafana, sin exponer el puerto 9090):
 
 ```bash
-curl -s -u admin:citibike-ep3 \
+curl -s -u "admin:$GRAFANA_PASS" \
   "http://$ALB:3000/api/datasources/proxy/uid/prometheus/api/v1/query?query=up" \
   | python3 -m json.tool | head -30
 ```
@@ -89,11 +97,11 @@ aws cloudwatch describe-alarms --alarm-name-prefix citibike-dev \
   --query 'MetricAlarms[].[AlarmName,StateValue,MetricName]' --output table
 ```
 
-Las 7 deben estar en `OK`. Reglas de Prometheus (desde Grafana → Alerting, o por
+Las 8 deben estar en `OK`. Reglas de Prometheus (desde Grafana → Alerting, o por
 API):
 
 ```bash
-curl -s -u admin:citibike-ep3 \
+curl -s -u "admin:$GRAFANA_PASS" \
   "http://$ALB:3000/api/datasources/proxy/uid/prometheus/api/v1/rules" \
   | python3 -c "import json,sys;d=json.load(sys.stdin);[print(r['name'],r['state']) for g in d['data']['groups'] for r in g['rules']]"
 ```
@@ -109,8 +117,12 @@ aws ecs update-service --cluster citibike-dev-cluster --service dashboard --desi
 ```
 
 Es la forma más rápida de ver la observabilidad "en acción": la alarma cambia
-de estado, `probe_success` cae a 0 y la fila 1 se pone roja. **Recuerda
-devolver el servicio a 1 tarea.**
+de estado, `probe_success` cae a 0 y la fila 1 se pone roja. Con `alarm_email`
+configurado llega un correo de `ALARM` y otro de `OK` al recuperarse.
+**Recuerda devolver el servicio a 1 tarea.**
+
+Capturas para el informe: la alarma en `ALARM` (consola de CloudWatch), la fila
+1 en rojo y el correo de SNS.
 
 ## 6. El pipeline se detiene (IE6)
 
@@ -128,7 +140,32 @@ Verás `Run tests` en rojo, `SonarCloud` en rojo, los jobs de build/deploy en
 Cierra el PR y borra la rama al terminar. La captura de esta prueba está en
 `docs/evidence/*/ie6-gate-bloqueante.txt`.
 
+Con credenciales vigentes del Learner Lab, ese run también publica
+`QualityGatePassed=0` y la alarma `citibike-dev-ci-gate-failed` pasa a `ALARM`.
+
+### 6.1 Bloqueo por seguridad (Snyk)
+
+Mismo procedimiento, pero agregando una dependencia con una vulnerabilidad
+conocida de severidad alta en `requirements.txt` de Flask-Dashboard-S3:
+
+```bash
+git checkout -b demo/gate-seguridad
+echo "jinja2==2.10" >> requirements.txt
+git add . && git commit -m "demo: dependencia vulnerable" && git push -u origin demo/gate-seguridad
+gh pr create --title "demo: gate de seguridad" --body "no mergear"
+```
+
+El paso `Snyk Open Source (runtime)` falla, el check `Snyk (SCA + Code)` queda
+en rojo y el PR en **`BLOCKED`** (requiere que ese check esté entre los
+obligatorios de `main`). Cierra el PR y borra la rama al terminar.
+
 ## 7. Medir un despliegue (IE2 + IE3)
+
+El despliegue normal es automático: cada push a `main` de Flask-Dashboard-S3
+ejecuta el job `deploy-ecs`, que publica `DeploymentDurationSeconds` y deja un
+resumen (commit, revisión anterior y nueva, duración) en la pestaña Actions.
+
+Para medir uno a mano:
 
 ```bash
 ./scripts/deploy.sh latest

@@ -71,6 +71,7 @@ resource "aws_cloudwatch_metric_alarm" "target_5xx" {
   treat_missing_data  = "notBreaching"
 
   alarm_actions = local.alarm_actions
+  ok_actions    = local.alarm_actions
 }
 
 resource "aws_cloudwatch_metric_alarm" "latency_p95" {
@@ -91,6 +92,7 @@ resource "aws_cloudwatch_metric_alarm" "latency_p95" {
   treat_missing_data  = "notBreaching"
 
   alarm_actions = local.alarm_actions
+  ok_actions    = local.alarm_actions
 }
 
 # --- Recursos ---------------------------------------------------------------
@@ -112,6 +114,7 @@ resource "aws_cloudwatch_metric_alarm" "instance_cpu" {
   treat_missing_data  = "notBreaching"
 
   alarm_actions = local.alarm_actions
+  ok_actions    = local.alarm_actions
 }
 
 resource "aws_cloudwatch_metric_alarm" "instance_memory" {
@@ -131,6 +134,7 @@ resource "aws_cloudwatch_metric_alarm" "instance_memory" {
   treat_missing_data  = "notBreaching"
 
   alarm_actions = local.alarm_actions
+  ok_actions    = local.alarm_actions
 }
 
 # --- Quality gates del pipeline ---------------------------------------------
@@ -143,14 +147,17 @@ resource "aws_cloudwatch_metric_alarm" "ci_gate_failed" {
   metric_name = "QualityGatePassed"
   statistic   = "Minimum"
   period      = 300
-  # 12 periodos = 1 hora: si el gate se publica una vez por sesion, la alarma
-  # no se dispara por falta de datos dentro de la misma hora.
+  # Ventana de 1 hora (12 x 5 min) y basta UN punto en 0 para disparar:
+  # sin datapoints_to_alarm = 1, CloudWatch exige los 12 periodos en falla y,
+  # como el gate se publica una vez por run, la alarma nunca se activaba.
   evaluation_periods  = 12
+  datapoints_to_alarm = 1
   threshold           = 1
   comparison_operator = "LessThanThreshold"
   treat_missing_data  = "notBreaching"
 
   alarm_actions = local.alarm_actions
+  ok_actions    = local.alarm_actions
 }
 
 resource "aws_cloudwatch_metric_alarm" "model_gate_failed" {
@@ -162,9 +169,29 @@ resource "aws_cloudwatch_metric_alarm" "model_gate_failed" {
   statistic           = "Minimum"
   period              = 300
   evaluation_periods  = 12
+  datapoints_to_alarm = 1
   threshold           = 1
   comparison_operator = "LessThanThreshold"
   treat_missing_data  = "notBreaching"
 
   alarm_actions = local.alarm_actions
+  ok_actions    = local.alarm_actions
+}
+
+resource "aws_cloudwatch_metric_alarm" "deploy_failed" {
+  alarm_name        = "${local.dashboard_name}-deploy-failed"
+  alarm_description = "Un despliegue del dashboard en ECS no estabilizo o hizo rollback (DeploymentSucceeded = 0 en CitiBike/CI)."
+
+  namespace           = "CitiBike/CI"
+  metric_name         = "DeploymentSucceeded"
+  statistic           = "Minimum"
+  period              = 300
+  evaluation_periods  = 12
+  datapoints_to_alarm = 1
+  threshold           = 1
+  comparison_operator = "LessThanThreshold"
+  treat_missing_data  = "notBreaching"
+
+  alarm_actions = local.alarm_actions
+  ok_actions    = local.alarm_actions
 }

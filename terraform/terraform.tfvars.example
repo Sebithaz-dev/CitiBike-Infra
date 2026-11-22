@@ -14,3 +14,8 @@ image_tag = "latest"
 
 render_health_url = "https://flask-dashboard-s3.onrender.com/health"
 log_retention_days = 7
+
+# Correo que recibe las alarmas de CloudWatch via SNS. Recomendado para la
+# demo: descomenta la linea y pon un correo real; AWS envia un correo de
+# confirmacion que hay que aceptar una vez. Si queda comentada, up.sh avisa.
+# alarm_email = "tu-correo@duocuc.cl"

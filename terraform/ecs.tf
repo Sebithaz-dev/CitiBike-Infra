@@ -1,3 +1,11 @@
+# Contrasena del admin de Grafana: se genera en cada entorno y nunca se
+# escribe en el repositorio. Se lee con:
+#   terraform -chdir=terraform output -raw grafana_admin_password
+resource "random_password" "grafana_admin" {
+  length  = 20
+  special = false
+}
+
 resource "aws_ecs_cluster" "main" {
   name = "${local.dashboard_name}-cluster"
 
@@ -189,7 +197,7 @@ resource "aws_ecs_task_definition" "grafana" {
       essential = true
       environment = [
         { name = "GF_SECURITY_ADMIN_USER", value = "admin" },
-        { name = "GF_SECURITY_ADMIN_PASSWORD", value = "citibike-ep3" },
+        { name = "GF_SECURITY_ADMIN_PASSWORD", value = random_password.grafana_admin.result },
         { name = "GF_USERS_ALLOW_SIGN_UP", value = "false" },
         { name = "GF_AUTH_ANONYMOUS_ENABLED", value = "true" },
         { name = "GF_AUTH_ANONYMOUS_ORG_ROLE", value = "Viewer" },

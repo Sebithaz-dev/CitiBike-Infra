@@ -41,7 +41,7 @@ GitHub Actions ──► GHCR (app + imágenes de monitoreo) ──┐
 
 ### ¿Por qué ECS y no Kubernetes?
 
-La EP2 usó Kubernetes simulado (`kind`) y manifiestos en `Flask-Dashboard-S3/k8s/`. Para la EP3 se evaluó EKS real y se descartó por restricciones del Learner Lab:
+La EP2 usó Kubernetes simulado (`kind`) y manifiestos en `Flask-Dashboard-S3/k8s/`. Para la EP3 se evaluó EKS real y se optó por ECS on EC2 por costo y simplicidad de operación, **con autorización del docente del curso**:
 
 | Criterio | EKS | **ECS on EC2 (elegido)** |
 |---|---|---|
@@ -65,12 +65,13 @@ La desviación se documenta en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) co
 
 ### Dashboard de Grafana (IE3)
 
-El dashboard `CitiBike EP3 - Observabilidad unificada` se aprovisiona automáticamente y tiene cuatro filas:
+El dashboard `CitiBike EP3 - Observabilidad unificada` se aprovisiona automáticamente y tiene cinco filas:
 
 1. **Disponibilidad:** `up{job="dashboard"}`, `probe_success` de ECS/Grafana/Render, estado del quality gate y tareas ECS corriendo.
 2. **Errores y latencia:** requests/s, 5xx/s, errores no controlados y latencia p95.
 3. **Recursos:** CPU/memoria del servicio y CPU del cluster (CloudWatch Container Insights).
-4. **CI/CD y modelo:** duración del despliegue, cobertura de tests y ROC-AUC histórico del modelo.
+4. **CI/CD y modelo:** duración del despliegue (publicada por el job `deploy-ecs` de Flask-Dashboard-S3), cobertura de tests por repo (Flask y Model-Training) y ROC-AUC histórico del modelo.
+5. **Logs:** errores registrados en los logs (nivel `ERROR` o status 5xx, cada 5 min) y los logs recientes del dashboard, consultados en CloudWatch Logs desde Grafana.
 
 ## Costos
 
@@ -111,7 +112,19 @@ cp terraform/terraform.tfvars.example terraform/terraform.tfvars
 ./scripts/down.sh        # destruye todo al terminar
 ```
 
-Grafana queda en `http://<alb-dns>:3000` con usuario `admin` / password `citibike-ep3`. El acceso anónimo está habilitado como **Viewer** para facilitar la evaluación; en producción se deshabilitaría y se usaría TLS.
+Grafana queda en `http://<alb-dns>:3000` con usuario `admin`. La contraseña la genera Terraform en cada entorno (no está en el repositorio):
+
+```bash
+terraform -chdir=terraform output -raw grafana_admin_password
+```
+
+Para recibir las alarmas por correo, define `alarm_email` en `terraform/terraform.tfvars` y confirma la suscripción SNS que llega por correo. El acceso anónimo está habilitado como **Viewer** para facilitar la evaluación; en producción se deshabilitaría y se usaría TLS.
+
+## Despliegue automático en ECS
+
+Cada push a `main` de Flask-Dashboard-S3 que pasa tests, smoke test, kind y publicación en GHCR ejecuta el job **`deploy-ecs`**: registra una revisión nueva de la task definition con la imagen `:<sha>`, actualiza el servicio `dashboard`, espera a que quede estable, confirma que no hubo rollback del circuit breaker y publica la duración en CloudWatch. Si el Learner Lab está apagado, el job lo informa con un warning y no falla.
+
+> `terraform apply` (`up.sh` / `deploy.sh`) vuelve a fijar la imagen de `var.image_tag`. Después de recrear el entorno, el siguiente push a `main` vuelve a desplegar la imagen del commit.
 
 ## Observabilidad y alertas
 
@@ -119,7 +132,8 @@ Grafana queda en `http://<alb-dns>:3000` con usuario `admin` / password `citibik
 - **Blackbox** mide disponibilidad de `http://localhost:5000/health`, `http://localhost:3000/api/health` y `https://flask-dashboard-s3.onrender.com/health`.
 - **Alertas** (`docker/prometheus/alerts.yml`): `DashboardDown`, `PublicEndpointDown`, `GrafanaDown`, `HighErrorRate` (>5 % de 5xx), `HighLatencyP95` (>1 s) y `UnhandledErrors`.
 - **CloudWatch Logs** recibe todos los contenedores vía `awslogs` con retención de 7 días. Los logs del dashboard son JSON con `request_id`.
-- **Métricas CI/CD** (`scripts/ci_metrics.py`): `DeploymentDurationSeconds`, `TestCoveragePercent`, `TestsPassed/Failed` y `QualityGatePassed` en `CitiBike/CI`.
+- **Métricas CI/CD** en `CitiBike/CI`: `TestCoveragePercent`, `TestsPassed/Failed` (dimensión `Repo`) y `QualityGatePassed` (1 si los tests pasan, 0 si fallan) desde el CI de cada repo; `DeploymentDurationSeconds` y `DeploymentSucceeded` desde el job `deploy-ecs` del pipeline de Flask (o `scripts/deploy.sh` en un despliegue manual).
+- **Alarmas de CloudWatch** (`terraform/monitoring.tf`): 8 alarmas (disponibilidad, 5xx, latencia p95, CPU, memoria, gate de CI, gate del modelo y despliegue fallido). Con `alarm_email` notifican por SNS al entrar en `ALARM` y al volver a `OK`.
 - **Métricas del modelo** (`Model-Training-S3/ml/metrics_export.py`): `roc_auc`, `f1_score`, `QualityGatePassed`, etc. en `CitiBike/Model`.
 - **Guía de verificación manual** (dashboard, logs, alarmas, falla controlada, gates y cierre): [`docs/TESTING.md`](docs/TESTING.md).
 
@@ -146,9 +160,9 @@ Grafana queda en `http://<alb-dns>:3000` con usuario `admin` / password `citibik
 
 | IE | Evidencia en este repo | Estado |
 |---|---|---|
-| IE1 (20 %) | Prometheus + Grafana + CloudWatch Logs, 6 reglas de alerta y 7 alarmas de CloudWatch (disponibilidad, 5xx, latencia p95, CPU, memoria, quality gates) | ✅ desplegado y verificado |
-| IE2 (20 %) | Terraform ECS/ALB en AWS real: 5/5 servicios `1/1`, target groups `healthy`, `/health` `/` `/metrics` 200 | ✅ desplegado y verificado |
-| IE3 (10 %) | Dashboard de 4 filas (disponibilidad, errores/latencia, recursos, CI/CD) + `ci_metrics.py` + publicación de cobertura desde el CI de Flask | ✅ con datos reales (cobertura 83,61 %, 29 tests) |
+| IE1 (20 %) | Prometheus + Grafana + CloudWatch Logs, 6 reglas de alerta, 8 alarmas de CloudWatch (disponibilidad, 5xx, latencia p95, CPU, memoria, quality gates, despliegue) con notificación SNS y logs visibles en Grafana | ✅ desplegado y verificado |
+| IE2 (20 %) | Terraform ECS/ALB en AWS real: 5/5 servicios `1/1`, target groups `healthy`, `/health` `/` `/metrics` 200; despliegue automático desde el pipeline (`deploy-ecs`) | ✅ desplegado y verificado |
+| IE3 (10 %) | Dashboard de 5 filas (disponibilidad, errores/latencia, recursos, CI/CD, logs); cobertura publicada por el CI de ambos repos y duración del despliegue por el job `deploy-ecs` | ✅ con datos reales (cobertura 83,61 %, 29 tests) |
 | IE4 (10 %) | `README`, `docs/ARCHITECTURE.md`, `docs/RUNBOOK.md`, `docs/COMPLIANCE.md` | 🟡 falta el informe EP3 y las reflexiones individuales |
 | IE5 (20 %) | Branch protection, checks requeridos, CODEOWNERS, Dependabot, secret scanning y `scripts/audit_compliance.py` (46/46 controles) | ✅ auditado |
 | IE6 (20 %) | Quality gate del modelo, cobertura mínima, Snyk/Sonar, `terraform validate`, circuit breaker y alarmas | ✅ implementado; falta la captura de un PR bloqueado |
