@@ -1,0 +1,6 @@
+job          instance                                           up
+blackbox     http://localhost:3000/api/health                   1
+blackbox     http://localhost:5000/health                       1
+blackbox     https://flask-dashboard-s3.onrender.com/health     1
+dashboard    localhost:5000                                     1
+prometheus   localhost:9090                                     1

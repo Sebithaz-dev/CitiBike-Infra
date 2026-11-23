@@ -1,0 +1,16 @@
+PR: https://github.com/Sebithaz-dev/Flask-Dashboard-S3/pull/27
+Titulo: demo: el gate de seguridad bloquea el merge (no mergear)
+Cambio: requirements.txt + django==2.2
+estado de merge: BLOCKED
+Snyk (SCA + Code)	fail	55s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/45090197075/job/137417779941	
+security/snyk (sebithaz-dev)	fail	0	https://app.snyk.io/org/sebithaz-dev/pr-checks/67cb6497-a060-4e79-926c-07d6080f4a11	1 test has failed
+Deploy en AWS ECS	skipping	0	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/45090197277/job/137418971223	
+Deploy to Render	skipping	0	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/45090197277/job/137418971058	
+Publicar imagen en GHCR	skipping	0	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/45090197277/job/137418970932	
+Build Docker image	pass	1m18s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/45090197277/job/137418010302	
+Deploy en Kubernetes simulado (kind)	pass	1m50s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/45090197277/job/137418409714	
+Run tests	pass	44s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/45090197277/job/137417780035	
+Snyk Open Source	pass	3s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/runs/137418022598	
+SonarCloud	pass	1m22s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/actions/runs/45090197075/job/137417779714	
+SonarCloud	pass	5s	https://github.com/Sebithaz-dev/Flask-Dashboard-S3/runs/137418167445	
+SonarCloud Code Analysis	pass	28s	https://sonarcloud.io/dashboard?id=Sebithaz-dev_Flask-Dashboard-S3&pullRequest=27	

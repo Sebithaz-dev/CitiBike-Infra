@@ -1,0 +1,50 @@
+# Falla controlada — 2026-11-23T00:43:11Z
+
+Estado inicial: OK
+
+## Dashboard detenido (desired-count 0)
+0
+  00:43:14  citibike-dev-dashboard-unhealthy = OK
+  00:43:35  citibike-dev-dashboard-unhealthy = OK
+  00:43:55  citibike-dev-dashboard-unhealthy = OK
+  00:44:16  citibike-dev-dashboard-unhealthy = OK
+  00:44:37  citibike-dev-dashboard-unhealthy = OK
+  00:45:06  citibike-dev-dashboard-unhealthy = OK
+  00:45:26  citibike-dev-dashboard-unhealthy = OK
+  00:45:47  citibike-dev-dashboard-unhealthy = OK
+  00:46:08  citibike-dev-dashboard-unhealthy = OK
+  00:46:29  citibike-dev-dashboard-unhealthy = OK
+  00:46:50  citibike-dev-dashboard-unhealthy = OK
+  00:47:10  citibike-dev-dashboard-unhealthy = OK
+  00:47:31  citibike-dev-dashboard-unhealthy = OK
+  00:47:52  citibike-dev-dashboard-unhealthy = ALARM
+-> la alarma paso a ALARM
+
+## Dashboard restaurado (desired-count 1)
+1
+  00:48:10  citibike-dev-dashboard-unhealthy = ALARM
+  00:48:31  citibike-dev-dashboard-unhealthy = ALARM
+  00:48:52  citibike-dev-dashboard-unhealthy = ALARM
+  00:49:12  citibike-dev-dashboard-unhealthy = ALARM
+  00:49:33  citibike-dev-dashboard-unhealthy = ALARM
+  00:49:54  citibike-dev-dashboard-unhealthy = ALARM
+  00:50:15  citibike-dev-dashboard-unhealthy = ALARM
+  00:50:42  citibike-dev-dashboard-unhealthy = ALARM
+  00:51:02  citibike-dev-dashboard-unhealthy = ALARM
+  00:51:23  citibike-dev-dashboard-unhealthy = ALARM
+  00:51:44  citibike-dev-dashboard-unhealthy = OK
+-> la alarma volvio a OK
+
+## Historial de la alarma
+------------------------------------------------------
+|                DescribeAlarmHistory                |
++---------------------------------+------------------+
+|             cambio              |      fecha       |
++---------------------------------+------------------+
+|  Alarm updated from ALARM to OK |  1795395098.072  |
+|  Alarm updated from OK to ALARM |  1795394858.074  |
+|  Alarm updated from ALARM to OK |  1795394378.073  |
+|  Alarm updated from OK to ALARM |  1795394318.073  |
+|  Alarm updated from ALARM to OK |  1795393771.465  |
+|  Alarm updated from OK to ALARM |  1795126427.883  |
++---------------------------------+------------------+

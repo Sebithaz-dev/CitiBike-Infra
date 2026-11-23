@@ -1,0 +1,40 @@
+## CitiBike/Model
+accuracy
+f1_score
+gini
+pr_auc
+precision
+QualityGatePassed
+recall
+roc_auc
+test_size
+train_size
+
+## CitiBike/CI
+DeploymentDurationSeconds
+DeploymentSucceeded
+QualityGatePassed
+TestCoveragePercent
+TestsFailed
+TestsPassed
+
+## ECS/ContainerInsights
+ContainerInstanceCount
+CpuReserved
+CpuUtilized
+DeploymentCount
+DesiredTaskCount
+MemoryReserved
+MemoryUtilized
+PendingTaskCount
+RunningTaskCount
+ServiceCount
+StorageReadBytes
+StorageWriteBytes
+TaskCount
+TaskSetCount
+
+## CWAgent
+disk_used_percent
+mem_used_percent
+
