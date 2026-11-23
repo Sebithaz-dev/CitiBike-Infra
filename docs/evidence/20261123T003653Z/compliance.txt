@@ -1,0 +1,37 @@
+
+== Sebithaz-dev/CitiBike-Infra ==
+  [ SKIP ] no evaluable  (HTTP 404 (/repos/Sebithaz-dev/CitiBike-Infra/branches/main/protection))
+  [ OK  ] Archivo SECURITY.md
+  [ OK  ] Archivo .github/CODEOWNERS
+  [ OK  ] Archivo .github/dependabot.yml
+  [ SKIP ] no evaluable  (security_and_analysis no disponible para este token)
+  [ OK  ] Workflow 'Auditoria de cumplimiento' en verde
+  [ OK  ] Workflow 'Infra CI' en verde
+  [ OK  ] Workflow 'Monitoring Images' en verde
+  [ OK  ] Workflow 'Dependabot Updates' en verde
+  [ OK  ] Workflow 'Dependency Graph' en verde
+
+== Sebithaz-dev/Flask-Dashboard-S3 ==
+  [ SKIP ] no evaluable  (HTTP 404 (/repos/Sebithaz-dev/Flask-Dashboard-S3/branches/main/protection))
+  [ OK  ] Archivo SECURITY.md
+  [ OK  ] Archivo .github/CODEOWNERS
+  [ OK  ] Archivo .github/dependabot.yml
+  [ SKIP ] no evaluable  (security_and_analysis no disponible para este token)
+  [ OK  ] Workflow 'CI/CD Flask Dashboard' en verde
+  [ OK  ] Workflow 'Security & Quality' en verde
+  [ OK  ] Workflow 'Dependabot Updates' en verde
+  [ OK  ] Workflow 'Dependency Graph' en verde
+
+== Sebithaz-dev/Model-Training-S3 ==
+  [ SKIP ] no evaluable  (HTTP 404 (/repos/Sebithaz-dev/Model-Training-S3/branches/main/protection))
+  [ OK  ] Archivo SECURITY.md
+  [ OK  ] Archivo .github/CODEOWNERS
+  [ OK  ] Archivo .github/dependabot.yml
+  [ SKIP ] no evaluable  (security_and_analysis no disponible para este token)
+  [ OK  ] Workflow 'CI' en verde
+  [ OK  ] Workflow 'Security & Quality' en verde
+  [ OK  ] Workflow 'Train Model' en verde
+  [ OK  ] Workflow 'Dependabot Updates' en verde
+  [ OK  ] Workflow 'Dependency Graph' en verde
+
+Resumen: 29 controles, 0 fallas, 6 no evaluables.

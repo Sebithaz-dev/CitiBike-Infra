@@ -1,0 +1,14 @@
+---------------------------------------------------------------------------------------
+|                                   DescribeAlarms                                    |
++-----------------------------------+---------+-----------------------------+---------+
+|              alarma               | estado  |           metrica           | umbral  |
++-----------------------------------+---------+-----------------------------+---------+
+|  citibike-dev-ci-gate-failed      |  OK     |  QualityGatePassed          |  1.0    |
+|  citibike-dev-dashboard-unhealthy |  OK     |  HealthyHostCount           |  1.0    |
+|  citibike-dev-deploy-failed       |  OK     |  DeploymentSucceeded        |  1.0    |
+|  citibike-dev-instance-cpu        |  OK     |  CPUUtilization             |  85.0   |
+|  citibike-dev-instance-memory     |  OK     |  mem_used_percent           |  85.0   |
+|  citibike-dev-latency-p95         |  OK     |  TargetResponseTime         |  1.5    |
+|  citibike-dev-model-gate-failed   |  OK     |  QualityGatePassed          |  1.0    |
+|  citibike-dev-target-5xx          |  OK     |  HTTPCode_Target_5XX_Count  |  5.0    |
++-----------------------------------+---------+-----------------------------+---------+

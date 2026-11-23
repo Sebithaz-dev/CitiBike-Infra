@@ -1,0 +1,28 @@
+
+== Esperando servicios estables ==
+  [ OK ] servicios estables
+
+== Servicios ECS (cluster citibike-dev-cluster) ==
+  [ OK ] dashboard: 1/1 tareas (COMPLETED)
+  [ OK ] prometheus: 1/1 tareas (COMPLETED)
+  [ OK ] grafana: 1/1 tareas (COMPLETED)
+  [ OK ] alertmanager: 1/1 tareas (COMPLETED)
+  [ OK ] blackbox: 1/1 tareas (COMPLETED)
+
+== Target groups del ALB ==
+  [ OK ] citibike-dev-dash: healthy
+  [ OK ] citibike-dev-graf: healthy
+
+== Dashboard Flask ==
+  [ OK ] /health -> 200
+  [ OK ] / -> 200
+  [ OK ] /metrics -> 200
+
+== Grafana ==
+  [ OK ] /api/health: database ok
+  [ OK ] datasource CloudWatch
+  [ OK ] datasource Prometheus
+  [ OK ] dashboard citibike-ep3: 5 filas
+
+== Resumen ==
+  Todo OK.

@@ -1,0 +1,11 @@
+----------------------------------------------------------------------------------------------------------------------------------------------------
+|                                                                 DescribeServices                                                                 |
++-----------+-----------+---------+------------+---------------+-----------------------------------------------------------------------------------+
+| corriendo | deseadas  | estado  |  rollout   |   servicio    |                                       tarea                                       |
++-----------+-----------+---------+------------+---------------+-----------------------------------------------------------------------------------+
+|  1        |  1        |  ACTIVE |  COMPLETED |  dashboard    |  arn:aws:ecs:us-east-1:690247773624:task-definition/citibike-dev-dashboard:2      |
+|  1        |  1        |  ACTIVE |  COMPLETED |  grafana      |  arn:aws:ecs:us-east-1:690247773624:task-definition/citibike-dev-grafana:2        |
+|  1        |  1        |  ACTIVE |  COMPLETED |  prometheus   |  arn:aws:ecs:us-east-1:690247773624:task-definition/citibike-dev-prometheus:1     |
+|  1        |  1        |  ACTIVE |  COMPLETED |  alertmanager |  arn:aws:ecs:us-east-1:690247773624:task-definition/citibike-dev-alertmanager:1   |
+|  1        |  1        |  ACTIVE |  COMPLETED |  blackbox     |  arn:aws:ecs:us-east-1:690247773624:task-definition/citibike-dev-blackbox:1       |
++-----------+-----------+---------+------------+---------------+-----------------------------------------------------------------------------------+

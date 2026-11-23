@@ -1,0 +1,1 @@
+arn:aws:ecs:us-east-1:690247773624:container-instance/citibike-dev-cluster/c85b561fe70e4b37abfc9b4bf7426826

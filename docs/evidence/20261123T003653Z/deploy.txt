@@ -1,0 +1,80 @@
+Desplegando dashboard con tag latest...
+[0m[1mrandom_password.grafana_admin: Refreshing state... [id=none][0m
+[0m[1mdata.aws_iam_role.task: Reading...[0m[0m
+[0m[1mdata.aws_ssm_parameter.ecs_ami: Reading...[0m[0m
+[0m[1mdata.aws_vpc.default: Reading...[0m[0m
+[0m[1mdata.aws_iam_instance_profile.lab: Reading...[0m[0m
+[0m[1mdata.aws_caller_identity.current: Reading...[0m[0m
+[0m[1maws_ecs_cluster.main: Refreshing state... [id=arn:aws:ecs:us-east-1:690247773624:cluster/citibike-dev-cluster][0m
+[0m[1maws_cloudwatch_log_group.service["prometheus"]: Refreshing state... [id=/ecs/citibike-dev/prometheus][0m
+[0m[1maws_cloudwatch_log_group.service["alertmanager"]: Refreshing state... [id=/ecs/citibike-dev/alertmanager][0m
+[0m[1maws_cloudwatch_log_group.service["dashboard"]: Refreshing state... [id=/ecs/citibike-dev/dashboard][0m
+[0m[1maws_sns_topic.alarms[0]: Refreshing state... [id=arn:aws:sns:us-east-1:690247773624:citibike-dev-alarms][0m
+[0m[1mdata.aws_caller_identity.current: Read complete after 0s [id=690247773624][0m
+[0m[1maws_cloudwatch_log_group.service["grafana"]: Refreshing state... [id=/ecs/citibike-dev/grafana][0m
+[0m[1mdata.aws_iam_role.task: Read complete after 1s [id=LabRole][0m
+[0m[1maws_cloudwatch_log_group.service["blackbox"]: Refreshing state... [id=/ecs/citibike-dev/blackbox][0m
+[0m[1mdata.aws_iam_instance_profile.lab: Read complete after 1s [id=AIPA2BNPZFW4EMENF7O74][0m
+[0m[1mdata.aws_region.current: Reading...[0m[0m
+[0m[1mdata.aws_region.current: Read complete after 0s [id=us-east-1][0m
+[0m[1mdata.aws_ssm_parameter.ecs_ami: Read complete after 1s [id=/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id][0m
+[0m[1maws_sns_topic_subscription.alarms_email[0]: Refreshing state... [id=arn:aws:sns:us-east-1:690247773624:citibike-dev-alarms:04f2d4a7-30fe-4e06-b2df-c560e0784471][0m
+[0m[1maws_cloudwatch_metric_alarm.ci_gate_failed: Refreshing state... [id=citibike-dev-ci-gate-failed][0m
+[0m[1maws_cloudwatch_metric_alarm.model_gate_failed: Refreshing state... [id=citibike-dev-model-gate-failed][0m
+[0m[1maws_cloudwatch_metric_alarm.deploy_failed: Refreshing state... [id=citibike-dev-deploy-failed][0m
+[0m[1maws_ecs_task_definition.alertmanager: Refreshing state... [id=citibike-dev-alertmanager][0m
+[0m[1maws_ecs_task_definition.prometheus: Refreshing state... [id=citibike-dev-prometheus][0m
+[0m[1maws_ecs_task_definition.grafana: Refreshing state... [id=citibike-dev-grafana][0m
+[0m[1maws_ecs_task_definition.blackbox: Refreshing state... [id=citibike-dev-blackbox][0m
+[0m[1maws_ecs_task_definition.dashboard: Refreshing state... [id=citibike-dev-dashboard][0m
+[0m[1mdata.aws_vpc.default: Read complete after 1s [id=vpc-0e9d2c0aca32db181][0m
+[0m[1mdata.aws_subnets.default: Reading...[0m[0m
+[0m[1maws_lb_target_group.grafana: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-1:690247773624:targetgroup/citibike-dev-graf/e52b9dee88fc5e47][0m
+[0m[1maws_security_group.alb: Refreshing state... [id=sg-09969933854b87c68][0m
+[0m[1maws_lb_target_group.dashboard: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-1:690247773624:targetgroup/citibike-dev-dash/4ad44473ec09b93f][0m
+[0m[1mdata.aws_subnets.default: Read complete after 1s [id=us-east-1][0m
+[0m[1maws_security_group.ecs: Refreshing state... [id=sg-01cd995f3dfdabd8c][0m
+[0m[1maws_lb.main: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-1:690247773624:loadbalancer/app/citibike-dev-alb/f9d9c953a474b3e7][0m
+[0m[1maws_instance.ecs: Refreshing state... [id=i-0aeffc1b0e5f68722][0m
+[0m[1maws_cloudwatch_metric_alarm.target_5xx: Refreshing state... [id=citibike-dev-target-5xx][0m
+[0m[1maws_lb_listener.http: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-1:690247773624:listener/app/citibike-dev-alb/f9d9c953a474b3e7/806bf7629d345b2c][0m
+[0m[1maws_cloudwatch_metric_alarm.dashboard_unhealthy: Refreshing state... [id=citibike-dev-dashboard-unhealthy][0m
+[0m[1maws_cloudwatch_metric_alarm.latency_p95: Refreshing state... [id=citibike-dev-latency-p95][0m
+[0m[1maws_lb_listener.grafana: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-1:690247773624:listener/app/citibike-dev-alb/f9d9c953a474b3e7/12d044f2aca1e55a][0m
+[0m[1maws_lb_target_group_attachment.grafana: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-1:690247773624:targetgroup/citibike-dev-graf/e52b9dee88fc5e47-20261123003424181900000003][0m
+[0m[1maws_lb_target_group_attachment.dashboard: Refreshing state... [id=arn:aws:elasticloadbalancing:us-east-1:690247773624:targetgroup/citibike-dev-dash/4ad44473ec09b93f-20261123003424089600000002][0m
+[0m[1maws_cloudwatch_metric_alarm.instance_cpu: Refreshing state... [id=citibike-dev-instance-cpu][0m
+[0m[1maws_cloudwatch_metric_alarm.instance_memory: Refreshing state... [id=citibike-dev-instance-memory][0m
+[0m[1maws_ecs_service.blackbox: Refreshing state... [id=arn:aws:ecs:us-east-1:690247773624:service/citibike-dev-cluster/blackbox][0m
+[0m[1maws_ecs_service.alertmanager: Refreshing state... [id=arn:aws:ecs:us-east-1:690247773624:service/citibike-dev-cluster/alertmanager][0m
+[0m[1maws_ecs_service.prometheus: Refreshing state... [id=arn:aws:ecs:us-east-1:690247773624:service/citibike-dev-cluster/prometheus][0m
+[0m[1maws_ecs_service.dashboard: Refreshing state... [id=arn:aws:ecs:us-east-1:690247773624:service/citibike-dev-cluster/dashboard][0m
+[0m[1maws_ecs_service.grafana: Refreshing state... [id=arn:aws:ecs:us-east-1:690247773624:service/citibike-dev-cluster/grafana][0m
+
+[0m[1m[32mNo changes.[0m[1m Your infrastructure matches the configuration.[0m
+
+[0mTerraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+[0m[1m[32m
+Apply complete! Resources: 0 added, 0 changed, 0 destroyed.[0m
+[0m[1m[32m
+Outputs:
+
+[0malarm_notifications = "SNS -> <alarm_email> (confirmar la suscripcion por correo)"
+alb_dns_name = "citibike-dev-alb-1774666530.us-east-1.elb.amazonaws.com"
+dashboard_url = "http://citibike-dev-alb-1774666530.us-east-1.elb.amazonaws.com"
+ecs_cluster_name = "citibike-dev-cluster"
+ecs_instance_id = "i-0aeffc1b0e5f68722"
+grafana_admin_password = <sensitive>
+grafana_url = "http://citibike-dev-alb-1774666530.us-east-1.elb.amazonaws.com:3000"
+log_groups = {
+  "alertmanager" = "/ecs/citibike-dev/alertmanager"
+  "blackbox" = "/ecs/citibike-dev/blackbox"
+  "dashboard" = "/ecs/citibike-dev/dashboard"
+  "grafana" = "/ecs/citibike-dev/grafana"
+  "prometheus" = "/ecs/citibike-dev/prometheus"
+}
+prometheus_internal_url = "http://172.31.43.162:9090"
+Esperando estabilidad del servicio (esto puede tardar varios minutos)...
+Despliegue estable en 142s.
+Duracion publicada en CloudWatch (CitiBike/CI/DeploymentDurationSeconds).
