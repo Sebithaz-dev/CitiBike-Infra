@@ -194,7 +194,12 @@
           "statistic": "Maximum",
           "region": "us-east-1",
           "period": "300",
-          "matchExact": true
+          "matchExact": true,
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "dimensions": {},
+          "id": ""
         }
       ]
     },
@@ -243,7 +248,11 @@
           },
           "region": "us-east-1",
           "period": "300",
-          "matchExact": false
+          "matchExact": false,
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "id": ""
         }
       ]
     },
@@ -484,7 +493,11 @@
           },
           "region": "us-east-1",
           "period": "300",
-          "matchExact": true
+          "matchExact": true,
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "id": ""
         }
       ]
     },
@@ -529,7 +542,11 @@
           },
           "region": "us-east-1",
           "period": "300",
-          "matchExact": true
+          "matchExact": true,
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "id": ""
         }
       ]
     },
@@ -571,7 +588,11 @@
           "dimensions": {},
           "region": "us-east-1",
           "period": "60",
-          "matchExact": false
+          "matchExact": false,
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "id": ""
         }
       ]
     },
@@ -613,7 +634,11 @@
           "dimensions": {},
           "region": "us-east-1",
           "period": "60",
-          "matchExact": false
+          "matchExact": false,
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "id": ""
         }
       ]
     },
@@ -666,7 +691,12 @@
           "statistic": "Maximum",
           "region": "us-east-1",
           "period": "300",
-          "matchExact": true
+          "matchExact": true,
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "dimensions": {},
+          "id": ""
         }
       ]
     },
@@ -735,7 +765,11 @@
           "dimensions": {
             "Repo": "Flask-Dashboard-S3"
           },
-          "label": "Flask-Dashboard-S3"
+          "label": "Flask-Dashboard-S3",
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "id": ""
         },
         {
           "datasource": {
@@ -752,7 +786,11 @@
           "dimensions": {
             "Repo": "Model-Training-S3"
           },
-          "label": "Model-Training-S3"
+          "label": "Model-Training-S3",
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "id": ""
         }
       ]
     },
@@ -795,7 +833,12 @@
           "statistic": "Average",
           "region": "us-east-1",
           "period": "300",
-          "matchExact": true
+          "matchExact": true,
+          "queryMode": "Metrics",
+          "metricQueryType": 0,
+          "metricEditorMode": 0,
+          "dimensions": {},
+          "id": ""
         }
       ]
     },
